@@ -1,0 +1,103 @@
+{% extends "auctions/layout.html" %}
+{%load static %}
+{% block body %}
+<h1>Listing: {{listing.title}}</h1>
+
+
+<div>
+    <a href="{% url 'addToWatchlist' listing.id %}" style="background-color: #6c757d; color:white; font-size: 13px;text-align: center; height:20px; width:65px; border-radius: 4px;display: inline-block;">
+        <b>Watchlist</b>
+    </a>
+</div>
+<br>
+<div>
+    <img src="{{listing.image_url}}" alt="Listing Image" style="max-width: 100%; max-height: 100%;">
+    <!--max-width: 100%; max-height: 100%; are essential to always make sure that the image will take up to 100% of the width and height of its immediate container,
+    which is the <div> in this case. If the <div> doesn't have a specific size set, it will expand to fit the size of its contents.-->
+</div>
+<br>
+
+<div>
+    <b style="font-size: 20px;">{{listing.text_description}}</b>
+    <br>
+    <b style="font-size: 40px;">${{listing.bid}}</b>
+</div>
+<p>
+    {{bid_count}} bid(s) so far. {%if currentBidderMessage%} {{currentBidderMessage}} {% endif %}
+</p>
+{%if listing.active %}
+<form action = "{% url 'bid' listing.id %}" method="post">
+    {% csrf_token %}
+    <p>
+    <input type="text" name="current_bid" placeholder="Bid" style="border: 1px solid #dee2e6; width: 1450px; height:35px; border-radius: 4px;">
+    </p>
+    <p>
+    <input type="submit" value="Place Bid" style="background-color: #007bff;border-color:#007bff ; border-radius: 4px; color: white; width: 90px;height : 40px;">
+    </p>
+</form>
+{%if message %}
+    <div>
+        {{message}}
+    </div>
+{% endif %}
+<!--In case of invalid form-->
+{%if biddingForm.errors %}
+{{ biddingForm.errors }}
+{% endif %}
+
+{%elif not listing.active %}
+
+<b style="font-size: 40px;">This listing is closed.</b>
+
+{% endif %}
+<div>
+    <b style="font-size: 40px;">Details</b>
+    <ul>
+        <b style="font-size: 20px;">Listed by: {{listing.user.username}}</b>
+    </ul>
+    <ul>
+        <b style="font-size: 20px;">Category: {{listing.category.catergory_name}}</b>
+    </ul>
+</div>
+<br>
+<!--The users who are signed in should be able to comment and all comments made should be shown-->
+<form action = "{% url 'comment' listing.id %}" method="post">
+    {% csrf_token %}
+    <p>
+    <input type="text" name="Comment" placeholder="Comment" style="border: 1px solid #dee2e6; width: 1450px; height:35px; border-radius: 4px;">
+    </p>
+    <p>
+    <input type="submit"style="background-color: #007bff;border-color:#007bff ; border-radius: 4px; color: white; width: 90px;height : 40px;">
+    </p>
+</form>
+
+<!--if comment form invalid-->
+{%if commentForm.errors %}
+{{ commentForm.errors }}
+{% endif %}
+
+{% for comment in comments %}
+    <p>
+        <b style="font-size: 20px; color: #007bff">{{comment.user.username}}</b>
+         commented:
+        </br>
+        <div style="margin-left: 30px;">{{comment.Comment}}</div>
+    </p>
+
+{%empty%}
+    <li>No comments</li>
+{% endfor %}
+<!--If the current user is the one who listed it they should have the ability to close the list-->
+{% if authorityToClose%}
+<div>
+    <a href="{% url 'close' listing.id %}" style="background-color: #007bff;border-color:#007bff ; border-radius: 4px; color: white; width: 120px;height : 30px; text-align: center;display: inline-block;">
+        Close the Listing
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+<!--Blue color code:     color: #007bff;-->
+<!-- font-weight is to agjust how bold it should be (400 normal 700 bold)  -->
+<!--The placeholder attribute is not applicable to the input element of type submit.
+The placeholder attribute works with input types like text, search, url, tel, email, and password.
+It provides a hint to the user of what can be entered in the field.-->

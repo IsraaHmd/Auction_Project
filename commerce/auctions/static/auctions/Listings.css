@@ -1,0 +1,16 @@
+.rectangle {
+    border: 1px solid #dee2e6;
+    width: 1450px;
+}
+
+.image{
+    max-width: 500px;
+    max-height: 300px;
+    object-fit: contain;
+
+}
+
+#list.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}

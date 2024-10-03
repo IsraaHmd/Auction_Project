@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+{%load static %}
+{% block body %}
+
+    <h1>Watchlist</h1>
+    <link href="{% static 'auctions/Listings.css' %}" rel="stylesheet">
+    {%if message %}
+    <div> {{message}}</div>
+    {% else %}
+        {% for listing in listings %}
+            <a href="{% url 'listing' listing.id %}" style="color: black;">
+                <ul class="rectangle">
+                    <li id="list" class="container">
+                        <img src="{{listing.image_url}}" alt="Listing Image" class="image">
+                        <div style="margin-left: 20px">
+                            <b style="font-size: 30px;">{{listing.title}}</b>
+                            <br>
+                            <br>
+                            <b style="font-size: 20px;"> Price: ${{listing.bid}}</b>
+                            <div style="position: relative;margin-top: 190px;">
+                                <a href="{% url 'removeFromWatchlist' listing.id %}", style="position: absolute; bottom: 0; left: 0; font-size: 15px; color: black;">
+                                    Remove from watchlist
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </a>
+        {%empty%}
+        <li>No Listing</li>
+        {% endfor %}
+        {% endif %}
+{% endblock %}

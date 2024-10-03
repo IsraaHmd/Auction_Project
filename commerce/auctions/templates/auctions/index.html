@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+{%load static %}
+{% block body %}
+    <link href="{% static 'auctions/Listings.css' %}" rel="stylesheet">
+    <h2>Active Listings</h2>
+        {% for listing in listings %}
+        <a href="{% url 'listing' listing.id %}" style="color: black;">
+            <ul class="rectangle">
+                <li id="list" class="container">
+                    <img src="{{listing.image_url}}" alt="Listing Image" class="image">
+                    <div style="margin-left: 20px">
+                        <b style="font-size: 30px;">{{listing.title}}</b>
+                        <br>
+                        <br>
+                        <b style="font-size: 20px;"> Price: ${{listing.bid}}</b>
+                    </div>
+                </li>
+            </ul>
+        </a>
+        {%empty%}
+        <li>No Listing</li>
+        {% endfor %}
+{% endblock %}
+<!--Notes:
+1- When we put margin-right:3px in image in css file this did nto work because: In a flex container, margins don't always behave as you might expect, especially if there's only one item in the container.
+One thing you could try is applying the margin to the <div> that follows the image, rather than the image itself.
+This would push the <div> away from the image, creating a similar effect.
+-->
+<!-- This below did not work well whereby it was hard to format the words the way i wished
+<ul class="rectangle container"> <img src="{{listing.image_url}}" alt="Listing Image" class="image"> <b style="font-size: 30px;">{{listing.title}}</b><br><b style="font-size: 20px;"> Price: ${{listing.bid}}</b></ul>-->
